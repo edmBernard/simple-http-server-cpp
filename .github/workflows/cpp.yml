@@ -32,8 +32,8 @@ jobs:
     - name: Install (gcc-9) (Linux)
       if: runner.os == 'Linux'
       run: |
-        sudo apt-get install -y ${{ matrix.compiler }} ${{ matrix.compiler }}-multilib
-        echo "::set-env name=CXX::${{ matrix.compiler }}"
+        sudo apt-get install -y ${{ matrix.config.compiler }} ${{ matrix.config.compiler }}-multilib
+        echo "::set-env name=CXX::${{ matrix.config.compiler }}"
     - name: vcpkg
       shell: bash
       run: |
