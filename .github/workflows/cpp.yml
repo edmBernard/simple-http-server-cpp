@@ -16,6 +16,7 @@ jobs:
             os: ubuntu-latest,
             triplet: "x64-linux",
             artifact: uws,
+            compiler: g++-9,
             build_type: "Release"
           }
         - {
@@ -28,6 +29,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Install (gcc-9) (Linux)
+      if: os.runner == 'Linux'
+      run: |
+        sudo apt-get install -y ${{ matrix.compiler }} ${{ matrix.compiler }}-multilib
+        echo "::set-env name=CXX::${{ matrix.compiler }}"
     - name: vcpkg
       shell: bash
       run: |
