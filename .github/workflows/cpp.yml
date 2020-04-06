@@ -30,7 +30,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install (gcc-9) (Linux)
-      if: os.runner == 'Linux'
+      if: runner.os == 'Linux'
       run: |
         sudo apt-get install -y ${{ matrix.compiler }} ${{ matrix.compiler }}-multilib
         echo "::set-env name=CXX::${{ matrix.compiler }}"
