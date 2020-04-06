@@ -1,0 +1,46 @@
+name: C++ CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            os: ubuntu-latest,
+            triplet: "x64-linux",
+            artifact: uws,
+            build_type: "Release"
+          }
+        - {
+            os: windows-latest,
+            triplet: "x64-windows-static",
+            artifact: Release/uws.exe,
+            build_type: "Release"
+          }
+    runs-on: ${{ matrix.config.os }}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: vcpkg
+      shell: bash
+      run: |
+        pwd
+        git clone https://github.com/Microsoft/vcpkg.git
+        cd vcpkg
+        ./bootstrap-vcpkg.sh
+        ./vcpkg install uwebsockets:${{ matrix.config.triplet }} cxxopts:${{ matrix.config.triplet }}
+    - name: cmake
+      run: cmake . -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=${{ matrix.config.triplet }}
+    - name: make
+      run: cmake --build . --config ${{ matrix.config.build_type }}
+    - uses: actions/upload-artifact@v1
+      with:
+        name: http-server
+        path: ${{ matrix.config.artifact }}
