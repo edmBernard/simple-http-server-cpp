@@ -11,6 +11,8 @@ find_library(USOCKETS_LIB uSockets)
 find_package(ZLIB REQUIRED)
 find_package(cxxopts REQUIRED)
 
+find_package(unofficial-libuv CONFIG REQUIRED)
+
 #**************************************************************************************************
 # Include **************************************************************************************************
 include_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
@@ -41,4 +43,4 @@ SET(CMAKE_CXX_FLAGS "-std=c++17 -Wall -O3 -fPIC -fpermissive")
 #**************************************************************************************************
 add_executable(uws ${SOURCES})
 set_property(TARGET uws PROPERTY CXX_STANDARD 17)
-target_link_libraries(uws -pthread -lstdc++fs ${USOCKETS_LIB} ZLIB::ZLIB)
+target_link_libraries(uws -pthread -lstdc++fs ${USOCKETS_LIB} ZLIB::ZLIB unofficial::libuv::libuv)
