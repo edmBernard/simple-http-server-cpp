@@ -1,4 +1,5 @@
 #include <filesystem>
+#include <string_view>
 
 struct AsyncFileStreamer {
 
