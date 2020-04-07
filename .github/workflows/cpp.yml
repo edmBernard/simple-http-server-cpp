@@ -19,7 +19,7 @@ jobs:
           build_type: "Release"
         - os: windows-latest
           triplet: "x64-windows"
-          artifact: Release/uws.exe
+          artifact: Release
           build_type: "Release"
 
     runs-on: ${{ matrix.config.os }}
