@@ -40,9 +40,11 @@ jobs:
         git clone https://github.com/Microsoft/vcpkg.git
         cd vcpkg
         ./bootstrap-vcpkg.sh
-        ./vcpkg install libuv:${{ matrix.config.triplet }} uwebsockets:${{ matrix.config.triplet }} cxxopts:${{ matrix.config.triplet }}
+        ./vcpkg install uwebsockets:${{ matrix.config.triplet }} cxxopts:${{ matrix.config.triplet }}
     - name: check vcpkg
-      run: ./vcpkg list
+      run: |
+        cd vcpkg
+        ./vcpkg list
     - name: cmake
       run: cmake . -DCMAKE_TOOLCHAIN_FILE="vcpkg/scripts/buildsystems/vcpkg.cmake" -DVCPKG_TARGET_TRIPLET=${{ matrix.config.triplet }}
     - name: make
