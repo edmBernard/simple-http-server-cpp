@@ -12,19 +12,16 @@ jobs:
       fail-fast: false
       matrix:
         config:
-        - {
-            os: ubuntu-latest,
-            triplet: "x64-linux",
-            artifact: uws,
-            compiler: g++-9,
-            build_type: "Release"
-          }
-        - {
-            os: windows-latest,
-            triplet: "x64-windows-static",
-            artifact: Release/uws.exe,
-            build_type: "Release"
-          }
+        - os: ubuntu-latest,
+          triplet: "x64-linux",
+          artifact: uws,
+          compiler: g++-9,
+          build_type: "Release"
+        - os: windows-latest,
+          triplet: "x64-windows",
+          artifact: Release/uws.exe,
+          build_type: "Release"
+
     runs-on: ${{ matrix.config.os }}
 
     steps:

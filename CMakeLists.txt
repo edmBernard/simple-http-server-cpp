@@ -35,7 +35,7 @@ SET(SOURCES
 
 #**************************************************************************************************
 # Set compiler **************************************************************************************************
-SET(CMAKE_CXX_FLAGS "-std=c++17 -Wall -O3 -fPIC -fpermissive")
+SET(CMAKE_CXX_FLAGS "-Wall -O3 -fPIC -fpermissive")
 
 
 #**************************************************************************************************
@@ -43,4 +43,4 @@ SET(CMAKE_CXX_FLAGS "-std=c++17 -Wall -O3 -fPIC -fpermissive")
 #**************************************************************************************************
 add_executable(uws ${SOURCES})
 set_property(TARGET uws PROPERTY CXX_STANDARD 17)
-target_link_libraries(uws -pthread -lstdc++fs ${USOCKETS_LIB} ZLIB::ZLIB unofficial::libuv::libuv)
+target_link_libraries(uws -pthread -lstdc++fs ${USOCKETS_LIB} ZLIB::ZLIB)
