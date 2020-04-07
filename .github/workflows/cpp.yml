@@ -48,5 +48,5 @@ jobs:
       run: cmake --build . --config ${{ matrix.config.build_type }}
     - uses: actions/upload-artifact@v1
       with:
-        name: http-server
+        name: http-server-${{ matrix.config.triplet }}
         path: ${{ matrix.config.artifact }}
