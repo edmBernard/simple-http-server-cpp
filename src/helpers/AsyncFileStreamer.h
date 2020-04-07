@@ -41,9 +41,10 @@ struct AsyncFileStreamer {
   static void streamFile(uWS::HttpResponse<SSL> *res, AsyncFileReader *asyncFileReader) {
     /* Peek from cache */
     std::string_view chunk = asyncFileReader->peek(res->getWriteOffset());
-    if (!chunk.length() || res->tryEnd(chunk, asyncFileReader->getFileSize()).first) {
 
+    if (!chunk.length() || res->tryEnd(chunk, asyncFileReader->getFileSize()).first) {
       if (chunk.length() < asyncFileReader->getFileSize()) {
+
         asyncFileReader->request(res->getWriteOffset(), [res, asyncFileReader](std::string_view chunk) {
           /* We were aborted for some reason */
           if (!chunk.length()) {
@@ -54,12 +55,12 @@ struct AsyncFileStreamer {
         });
       }
     } else {
+
+      std::cout << "DEBUG chunklength IfFalse" << std::endl;
       /* We failed writing everything, so let's continue when we can */
       res->onWritable([res, asyncFileReader](int offset) {
-           // här kan skiten avbrytas!
-
            AsyncFileStreamer::streamFile(res, asyncFileReader);
-           // todo: I don't really know what this is supposed to mean?
+           std::cout << "DEBUG Flag2" << std::endl;
            return false;
          })
           ->onAborted([]() {
