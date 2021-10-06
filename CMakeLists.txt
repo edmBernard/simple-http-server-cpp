@@ -1,12 +1,13 @@
-project(uws)
+cmake_minimum_required(VERSION 3.21)
 
 #**************************************************************************************************
-# General cMake settings
-#**************************************************************************************************
-cmake_minimum_required(VERSION 3.5)
+# Project *****************************************************************************************
+project(simple-http
+        HOMEPAGE_URL https://github.com/edmBernard/simple-http-server-cpp
+        LANGUAGES CXX)
 
 #**************************************************************************************************
-# Find Package **************************************************************************************************
+# Find Package ************************************************************************************
 find_library(USOCKETS_LIB uSockets)
 find_package(ZLIB REQUIRED)
 find_package(cxxopts REQUIRED)
@@ -14,7 +15,7 @@ find_package(cxxopts REQUIRED)
 find_package(unofficial-libuv CONFIG REQUIRED)
 
 #**************************************************************************************************
-# Include **************************************************************************************************
+# Include *****************************************************************************************
 include_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
@@ -27,20 +28,23 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 # endforeach()
 
 #**************************************************************************************************
-# Set variable **************************************************************************************************
+# Set compiler Flags ******************************************************************************
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+  add_compile_options(/Oy /utf-8)
+else()
+  add_compile_options(-fPIC -O3 -fno-omit-frame-pointer)
+endif()
+
+#**************************************************************************************************
+# Set variable ************************************************************************************
 SET(SOURCES
   ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
 )
 
-
 #**************************************************************************************************
-# Set compiler **************************************************************************************************
-SET(CMAKE_CXX_FLAGS "-Wall -O3 -fPIC -fpermissive")
-
-
-#**************************************************************************************************
-# Make configuration
-#**************************************************************************************************
-add_executable(uws ${SOURCES})
-set_property(TARGET uws PROPERTY CXX_STANDARD 17)
-target_link_libraries(uws -pthread -lstdc++fs ${USOCKETS_LIB} ZLIB::ZLIB)
+# Make configuration ******************************************************************************
+add_executable(simple-http ${SOURCES})
+target_link_libraries(simple-http PRIVATE -pthread -lstdc++fs ${USOCKETS_LIB} ZLIB::ZLIB)
