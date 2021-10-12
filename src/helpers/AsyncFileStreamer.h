@@ -1,5 +1,6 @@
 #include <filesystem>
 #include <string_view>
+#include <algorithm>
 
 struct AsyncFileStreamer {
 
@@ -15,7 +16,8 @@ struct AsyncFileStreamer {
 
   void updateRootCache() {
     for (auto &p : std::filesystem::recursive_directory_iterator(root)) {
-      std::string url = p.path().string().substr(root.length());
+      std::string url = p.path().string().substr(root.length() - 1);
+      // std::replace(url.begin(), url.end(), '\\', '/');
       if (url == "/index.html") {
         url = "/";
       }

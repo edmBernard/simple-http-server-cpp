@@ -1,6 +1,7 @@
 // This is a simple HTTP(S) web server much like Python's SimpleHTTPServer
 
 #include <string>
+#include <iostream>
 
 #include <cxxopts.hpp>
 #include <uwebsockets/App.h>
@@ -44,15 +45,15 @@ int main(int argc, char **argv) {
     AsyncFileStreamer asyncFileStreamer(root);
 
     uWS::App().get("/*", [&asyncFileStreamer](auto *res, auto *req) {
-                asyncFileStreamer.streamFile(res, req->getUrl());
-                res->end();
-              })
-        .listen(port, [port, root](auto *token) {
-          if (token) {
+        asyncFileStreamer.streamFile(res, req->getUrl());
+        res->end();
+    })
+    .listen(port, [port, root](auto *token) {
+        if (token) {
             std::cout << "Serving " << root << " over HTTP a " << port << std::endl;
-          }
-        })
-        .run();
+        }
+    })
+    .run();
 
   } catch (const cxxopts::OptionException &e) {
     std::cout << "Error: parsing options: " << e.what() << std::endl;

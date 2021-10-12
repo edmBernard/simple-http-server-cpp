@@ -11,7 +11,7 @@ Dependencies :
 
 They can be installed with
 ```
-./vcpkg install cxxopt uwebsocket
+./vcpkg install cxxopts uwebsockets
 ```
 
 ## Compilation
@@ -21,5 +21,6 @@ mkdir build
 cd build
 # configure make with vcpkg toolchain
 cmake .. -DCMAKE_TOOLCHAIN_FILE=${VCPKG_DIR}/scripts/buildsystems/vcpkg.cmake
-cmake --build .
+# on Windows : cmake .. -DCMAKE_TOOLCHAIN_FILE=${env:VCPKG_DIR}/scripts/buildsystems/vcpkg.cmake
+cmake --build . --config Release
 ```

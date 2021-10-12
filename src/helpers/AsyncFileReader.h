@@ -1,10 +1,10 @@
-#include <string>
-#include <string_view>
 #include <fstream>
 #include <future>
 #include <iostream>
 #include <map>
 #include <sstream>
+#include <string>
+#include <string_view>
 
 /* This is just a very simple and inefficient demo of async responses,
  * please do roll your own variant or use a database or Node.js's async
@@ -33,7 +33,6 @@ public:
     // get fileSize
     fin.seekg(0, fin.end);
     fileSize = fin.tellg();
-
     // cache up 1 mb!
     cache.resize(1024 * 1024);
 
@@ -78,7 +77,6 @@ public:
     hasCache = false;
 
     std::async(std::launch::async, [this, cb, offset]() {
-
       if (!fin.good()) {
         fin.close();
         fin.open(fileName, std::ios::binary);
@@ -91,7 +89,6 @@ public:
 
       std::size_t chunkSize = std::min<std::size_t>(cache.length(), fileSize - offset);
       cb(std::string_view(cache.data(), chunkSize));
-
     });
   }
 
