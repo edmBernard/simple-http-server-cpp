@@ -38,7 +38,7 @@ jobs:
         git clone https://github.com/Microsoft/vcpkg.git
         cd vcpkg
         ./bootstrap-vcpkg.sh
-        ./vcpkg install uwebsockets:${{ matrix.config.triplet }} cxxopts:${{ matrix.config.triplet }}
+        ./vcpkg install uwebsockets:${{ matrix.config.triplet }} cxxopts:${{ matrix.config.triplet }} spdlog:${{ matrix.config.triplet }}
     - name: check vcpkg
       run: |
         cd vcpkg
