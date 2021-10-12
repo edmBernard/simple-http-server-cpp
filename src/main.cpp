@@ -1,6 +1,5 @@
 // This is a simple HTTP(S) web server much like Python's SimpleHTTPServer
 
-#include <iostream>
 #include <string>
 
 #include <cxxopts.hpp>
@@ -55,7 +54,7 @@ int main(int argc, char **argv) try {
             })
       .listen(port, [port, root](auto *token) {
         if (token) {
-          std::cout << "Serving " << root << " over HTTP a " << port << std::endl;
+          spdlog::info("Serving {} over HTTP a {}", root, port);
         }
       })
       .run();
