@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.21)
 
 #**************************************************************************************************
 # Project *****************************************************************************************
-project(simple-http
+project(simple-http-server
         HOMEPAGE_URL https://github.com/edmBernard/simple-http-server-cpp
         LANGUAGES CXX)
 
@@ -11,6 +11,8 @@ project(simple-http
 find_library(USOCKETS_LIB uSockets)
 find_package(ZLIB REQUIRED)
 find_package(cxxopts REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 
 find_package(unofficial-libuv CONFIG REQUIRED)
 
@@ -46,5 +48,5 @@ SET(SOURCES
 
 #**************************************************************************************************
 # Make configuration ******************************************************************************
-add_executable(simple-http ${SOURCES})
-target_link_libraries(simple-http PRIVATE -pthread -lstdc++fs ${USOCKETS_LIB} ZLIB::ZLIB)
+add_executable(simple-http-server ${SOURCES})
+target_link_libraries(simple-http-server PRIVATE -pthread -lstdc++fs ${USOCKETS_LIB} ZLIB::ZLIB fmt::fmt spdlog::spdlog)

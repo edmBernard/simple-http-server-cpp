@@ -1,6 +1,8 @@
+#include <algorithm>
 #include <filesystem>
 #include <string_view>
-#include <algorithm>
+
+#include <spdlog/spdlog.h>
 
 struct AsyncFileStreamer {
 
@@ -10,19 +12,18 @@ struct AsyncFileStreamer {
   AsyncFileStreamer(std::string root)
       : root(root) {
     // for all files in this path, init the map of AsyncFileReaders
-    std::cout << "root : " << root << std::endl;
+    spdlog::info("root : {}", root);
     updateRootCache();
   }
 
   void updateRootCache() {
     for (auto &p : std::filesystem::recursive_directory_iterator(root)) {
-      std::string url = p.path().string().substr(root.length() - 1);
-      // std::replace(url.begin(), url.end(), '\\', '/');
-      if (url == "/index.html") {
-        url = "/";
+      if (std::filesystem::is_directory(p.path())) {
+        continue;
       }
+      std::string url = "/" + std::filesystem::relative(p.path(), std::filesystem::path(root)).generic_string();
 
-      std::cout << "url available in root : " << url << std::endl;
+      spdlog::info("url available in root : {}", url);
       char *key = new char[url.length()];
       memcpy(key, url.data(), url.length());
       asyncFileReaders[std::string_view(key, url.length())] = new AsyncFileReader(p.path().string());
@@ -31,9 +32,9 @@ struct AsyncFileStreamer {
 
   template <bool SSL>
   void streamFile(uWS::HttpResponse<SSL> *res, std::string_view url) {
-    auto it = asyncFileReaders.find(url);
+    auto it = url == "/" ? asyncFileReaders.find("/index.html") : asyncFileReaders.find(url);
     if (it == asyncFileReaders.end()) {
-      std::cout << "Did not find file: " << url << std::endl;
+      spdlog::info("Did not find url: {}", url);
     } else {
       streamFile(res, it->second);
     }
@@ -41,14 +42,14 @@ struct AsyncFileStreamer {
 
   template <bool SSL>
   static void streamFile(uWS::HttpResponse<SSL> *res, AsyncFileReader *asyncFileReader) {
-    /* Peek from cache */
+    // Peek from cache
     std::string_view chunk = asyncFileReader->peek(res->getWriteOffset());
 
     if (!chunk.length() || res->tryEnd(chunk, asyncFileReader->getFileSize()).first) {
       if (chunk.length() < asyncFileReader->getFileSize()) {
 
         asyncFileReader->request(res->getWriteOffset(), [res, asyncFileReader](std::string_view chunk) {
-          /* We were aborted for some reason */
+          // We were aborted for some reason
           if (!chunk.length()) {
             res->close();
           } else {
@@ -58,15 +59,13 @@ struct AsyncFileStreamer {
       }
     } else {
 
-      std::cout << "DEBUG chunklength IfFalse" << std::endl;
-      /* We failed writing everything, so let's continue when we can */
+      // We failed writing everything, so let's continue when we can
       res->onWritable([res, asyncFileReader](int offset) {
            AsyncFileStreamer::streamFile(res, asyncFileReader);
-           std::cout << "DEBUG Flag2" << std::endl;
            return false;
          })
           ->onAborted([]() {
-            std::cout << "ABORTED!" << std::endl;
+            spdlog::info("Aborted request");
           });
     }
   }
