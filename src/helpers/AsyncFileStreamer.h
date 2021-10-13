@@ -4,6 +4,8 @@
 
 #include <spdlog/spdlog.h>
 
+#include <helpers/AsyncFileReader.h>
+
 struct AsyncFileStreamer {
 
   std::map<std::string_view, AsyncFileReader *> asyncFileReaders;

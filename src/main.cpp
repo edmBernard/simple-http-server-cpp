@@ -8,11 +8,8 @@
 
 #include <uwebsockets/App.h>
 
-#include "helpers/AsyncFileReader.h"
 #include "helpers/AsyncFileStreamer.h"
 
-/* optparse */
-#define OPTPARSE_IMPLEMENTATION
 
 int main(int argc, char **argv) try {
 
